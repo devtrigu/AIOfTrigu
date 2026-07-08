@@ -1,0 +1,919 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriguAI - AI Photo Editor & Product Maker</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Futuristic Look & Arial Default -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .futuristic-title {
+      font-family: 'Orbitron', Arial, sans-serif;
+      letter-spacing: 0.15em;
+    }
+    /* Custom Scrollbar for modern feel */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col transition-all duration-300">
+
+  <!-- Header Section -->
+  <header class="border-b border-blue-100 dark:border-blue-950/50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <!-- Logo Modern Tanpa Emoji -->
+        <svg class="w-8 h-8 text-blue-500 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="futuristic-title text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">TRIGUAI</span>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Language Selector -->
+        <select id="langSelect" class="bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-blue-900 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100">
+          <option value="id">Bahasa Indonesia</option>
+          <option value="en">English</option>
+        </select>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="p-2 rounded-lg bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-slate-700 transition">
+          <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <!-- Hero / Intro -->
+    <div class="text-center py-4 bg-gradient-to-r from-blue-500/10 via-cyan-500/5 to-blue-500/10 rounded-2xl p-6 border border-blue-100/30 dark:border-blue-950/30">
+      <h1 class="text-2xl md:text-3xl font-bold mb-2 tracking-tight" id="heroTitle">Ubah Foto Biasa Menjadi Karya Profesional</h1>
+      <p class="text-slate-600 dark:text-slate-400 text-sm max-w-2xl mx-auto" id="heroSubtitle">Didukung oleh teknologi kecerdasan buatan Gemini Nano Banana untuk pemrosesan foto instan berstandar studio.</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-blue-100 dark:border-blue-900/50 p-1 bg-blue-50/50 dark:bg-slate-900/50 rounded-xl max-w-xl mx-auto w-full">
+      <button onclick="switchTab('product')" id="tabProductBtn" class="flex-1 py-2.5 px-3 text-sm font-semibold rounded-lg transition-all duration-200 bg-blue-600 text-white shadow">
+        Foto Produk Maker
+      </button>
+      <button onclick="switchTab('merge')" id="tabMergeBtn" class="flex-1 py-2.5 px-3 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 dark:text-slate-300 hover:bg-blue-100/50 dark:hover:bg-slate-800">
+        Gabung Foto
+      </button>
+      <button onclick="switchTab('generate')" id="tabGenerateBtn" class="flex-1 py-2.5 px-3 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 dark:text-slate-300 hover:bg-blue-100/50 dark:hover:bg-slate-800">
+        Buat Gambar
+      </button>
+    </div>
+
+    <!-- Workspace Area -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Panel Kiri: Input & Kontrol -->
+      <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-blue-100 dark:border-blue-950 shadow-sm flex flex-col gap-5">
+        
+        <!-- SECTION 1: FOTO PRODUK MAKER -->
+        <div id="sectionProduct" class="flex flex-col gap-5">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2" id="lblUploadProduct">Unggah Foto Produk Utama</label>
+            <div id="dropzoneProduct" class="border-2 border-dashed border-blue-200 dark:border-blue-900 hover:border-blue-500 rounded-xl p-6 text-center cursor-pointer bg-blue-50/30 dark:bg-slate-950/30 transition-all flex flex-col items-center justify-center">
+              <svg class="w-10 h-10 text-blue-400 mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <p class="text-xs text-slate-500 dark:text-slate-400" id="txtDragDrop">Seret & letakkan foto di sini, atau klik untuk memilih</p>
+              <input type="file" id="inputProduct" accept="image/*" class="hidden" />
+            </div>
+            <!-- Preview Uploaded Image -->
+            <div id="previewProductWrapper" class="hidden mt-3 relative rounded-lg overflow-hidden border border-blue-200 dark:border-blue-900">
+              <img id="imgProductPreview" src="" class="w-full h-40 object-contain bg-slate-100 dark:bg-slate-950" />
+              <button onclick="clearProductImage()" class="absolute top-2 right-2 p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition shadow">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Template Pilihan Jika belum ada foto -->
+          <div>
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2" id="lblTemplate">Atau Gunakan Template Objek Kami</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="selectTemplate('serum')" class="border border-blue-100 dark:border-blue-900 rounded-xl p-2 bg-slate-50 dark:bg-slate-950 hover:border-blue-500 hover:bg-blue-50/50 transition flex flex-col items-center gap-1.5">
+                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 3h6v3H9zM7 6h10v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6z" />
+                  <circle cx="12" cy="13" r="2" />
+                </svg>
+                <span class="text-[10px] font-bold">Serum Bottle</span>
+              </button>
+              <button onclick="selectTemplate('sneaker')" class="border border-blue-100 dark:border-blue-900 rounded-xl p-2 bg-slate-50 dark:bg-slate-950 hover:border-blue-500 hover:bg-blue-50/50 transition flex flex-col items-center gap-1.5">
+                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 16s3-10 8-10 8 3 8 7-2 5-6 5H4v-2zM4 11h6M12 16l2-4" />
+                </svg>
+                <span class="text-[10px] font-bold">Sneakers</span>
+              </button>
+              <button onclick="selectTemplate('cup')" class="border border-blue-100 dark:border-blue-900 rounded-xl p-2 bg-slate-50 dark:bg-slate-950 hover:border-blue-500 hover:bg-blue-50/50 transition flex flex-col items-center gap-1.5">
+                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M17 8h1a3 3 0 110 6h-1M5 8h12v10a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" />
+                </svg>
+                <span class="text-[10px] font-bold">Coffee Cup</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: GABUNG FOTO (2 - 4) -->
+        <div id="sectionMerge" class="hidden flex flex-col gap-5">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300" id="lblUploadMerge">Unggah Gambar Gabungan (2-4)</label>
+              <span class="text-xs text-blue-500 font-bold" id="mergeCount">0 / 4</span>
+            </div>
+            <div id="dropzoneMerge" class="border-2 border-dashed border-blue-200 dark:border-blue-900 hover:border-blue-500 rounded-xl p-6 text-center cursor-pointer bg-blue-50/30 dark:bg-slate-950/30 transition-all flex flex-col items-center justify-center">
+              <svg class="w-10 h-10 text-blue-400 mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <p class="text-xs text-slate-500 dark:text-slate-400" id="txtDragMerge">Pilih 2 hingga 4 foto sekaligus untuk digabungkan</p>
+              <input type="file" id="inputMerge" accept="image/*" multiple class="hidden" />
+            </div>
+
+            <!-- List Preview Merge -->
+            <div id="mergePreviews" class="grid grid-cols-4 gap-2 mt-3"></div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: GENERATE (TEXT TO IMAGE) -->
+        <div id="sectionGenerate" class="hidden flex flex-col gap-5">
+          <p class="text-sm text-slate-500 dark:text-slate-400" id="txtGenerateIntro">Buat gambar yang sepenuhnya baru dari awal menggunakan instruksi teks Anda.</p>
+        </div>
+
+        <!-- PROMPT CONTROLS (Manual / Auto Prompt) -->
+        <div class="border-t border-blue-50 dark:border-blue-950 pt-4">
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300" id="lblInstruction">Instruksi Edit / Tema Latar</label>
+            <!-- Auto Prompt Generator Button -->
+            <button onclick="generateAutoPrompt()" id="btnAutoPrompt" class="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 0 0-1.022-.547l-2.387-.477a6 6 0 0 0-3.86.517l-.318.158a6 6 0 0 1-3.86.517L6.05 15.21a2 2 0 0 0-1.806.547M8 4h8l-1 1v5.172a2 2 0 0 0 .586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.829c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 0 0 9 10.172V5L8 4z"/></svg>
+              <span id="txtAutoPromptBtn">Buat Prompt Otomatis</span>
+            </button>
+          </div>
+          <textarea id="promptArea" rows="3" class="w-full bg-slate-50 dark:bg-slate-950 border border-blue-100 dark:border-blue-900 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400" placeholder="Contoh: letakkan produk di atas batu marmer mewah dengan air terjun estetik di belakangnya"></textarea>
+        </div>
+
+        <!-- PROCESSED BUTTON -->
+        <button id="btnProcess" onclick="processAI()" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span id="btnProcessTxt">Proses dengan AI</span>
+        </button>
+
+      </div>
+
+      <!-- Panel Kanan: Hasil AI & Pratinjau -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-900 dark:to-slate-950 rounded-2xl p-6 border border-blue-100 dark:border-blue-950 shadow-inner flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden">
+          
+          <!-- State: Idle (No processing & No image) -->
+          <div id="previewIdle" class="text-center flex flex-col items-center max-w-sm">
+            <div class="w-20 h-20 bg-blue-100/50 dark:bg-blue-950/50 rounded-full flex items-center justify-center mb-4 text-blue-500">
+              <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg mb-1" id="previewIdleTitle">Pratinjau Studio TriguAI</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400" id="previewIdleDesc">Unggah aset foto Anda atau buat konsep desain baru. Klik 'Proses dengan AI' untuk melihat hasil ajaib di sini.</p>
+          </div>
+
+          <!-- State: Loading / Generating -->
+          <div id="previewLoading" class="hidden text-center flex flex-col items-center">
+            <!-- Smooth pulse animation & loader -->
+            <div class="relative w-24 h-24 mb-6">
+              <div class="absolute inset-0 rounded-full border-4 border-blue-500/20 animate-ping"></div>
+              <div class="absolute inset-0 rounded-full border-t-4 border-blue-500 border-r-4 border-r-transparent animate-spin"></div>
+              <div class="absolute inset-2 bg-blue-600/10 dark:bg-blue-400/10 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-blue-500 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M9.813 15.904L9 21l8.904-8.904m-8.904 3.808L14.71 8M9.813 15.904L14.71 11M9.813 15.904l1.096-1.096m1.096-1.096l3.808-3.808m0 0L21 3l-8.904 8.904m8.904-8.904L12.096 12"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="font-bold text-lg mb-1" id="previewLoadingTitle">Sedang Mengolah Gambar...</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 animate-pulse" id="previewLoadingDesc">Gemini Nano Banana sedang bekerja menyempurnakan kualitas pixel Anda.</p>
+          </div>
+
+          <!-- State: Rendered Result -->
+          <div id="previewResult" class="hidden w-full h-full flex flex-col gap-4">
+            <div class="relative w-full max-h-[380px] rounded-xl overflow-hidden border border-blue-100 dark:border-blue-900 bg-slate-950 flex items-center justify-center">
+              <img id="resultImgEl" src="" class="max-h-[380px] max-w-full object-contain" alt="Hasil Olahan TriguAI" />
+              <div class="absolute top-3 left-3 px-3 py-1 bg-blue-600 text-white text-[11px] font-bold tracking-wider rounded-full shadow uppercase">TriguAI Result</div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 justify-end">
+              <button onclick="saveToHistory()" id="btnSave" class="py-2.5 px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold rounded-lg text-sm transition flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                <span id="btnSaveTxt">Simpan ke Galeri</span>
+              </button>
+              <a id="downloadAnchor" download="triguai-result.png" class="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span id="btnDownloadTxt">Unduh</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Gallery / History Section -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-blue-100 dark:border-blue-950 mt-4 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <h2 class="font-bold text-lg" id="galleryTitle">Riwayat Galeri</h2>
+        </div>
+        <button onclick="clearAllHistory()" id="btnClearHistory" class="text-xs text-red-500 hover:underline">Hapus Semua Riwayat</button>
+      </div>
+      
+      <div id="galleryEmpty" class="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">
+        <p id="txtGalleryEmpty">Belum ada karya yang disimpan. Mulai buat karya pertama Anda!</p>
+      </div>
+
+      <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <!-- Gallery cards populated via JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-lg flex items-center gap-3">
+    <div class="p-1 rounded-full bg-blue-500 text-white">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <span id="toastMsg" class="text-sm font-semibold">Tugas Selesai!</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-blue-50 dark:border-blue-950/30 bg-slate-100/50 dark:bg-slate-900/50 py-4 text-center text-xs text-slate-500">
+    <p>TriguAI &copy; 2026. Powered by Gemini Nano Banana Models. Designed beautifully & with ultra performance.</p>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // System variables provided by environment (or default values for local run)
+    const apiKey = ""; // Environment automatically populates/authenticates at runtime
+    
+    // Internal States
+    let currentLanguage = 'id';
+    let currentTab = 'product';
+    let currentTheme = 'dark'; // Defaulting to premium dark gradient look
+    let uploadedProductImage = null; // Base64
+    let uploadedMergeImages = []; // Array of Base64s (max 4)
+    let finalAIResult = null; // Base64
+    let savedGallery = [];
+
+    // Base64 Mocks for Template Objects (clean vectors for premium feel without external dependencies)
+    const templatesBase64 = {
+      serum: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e0f2fe"/><rect x="35" y="15" width="30" height="10" rx="2" fill="%23475569"/><rect x="42" y="25" width="16" height="40" rx="3" fill="%231e3a8a" opacity="0.8"/><rect x="44" y="29" width="12" height="15" fill="%23ffffff"/><text x="50" y="38" font-family="Arial" font-size="3" font-weight="bold" fill="%231e3a8a" text-anchor="middle">SERUM</text><circle cx="50" cy="52" r="4" fill="%2338bdf8"/></svg>`,
+      sneaker: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0fdf4"/><path d="M15,65 L35,40 L65,40 L85,60 L85,70 L15,70 Z" fill="%2315803d"/><path d="M15,62 L85,62 L85,70 L15,70 Z" fill="%23ffffff"/><circle cx="75" cy="50" r="3" fill="%23f59e0b"/><line x1="35" y1="45" x2="45" y2="55" stroke="%23ffffff" stroke-width="2"/></svg>`,
+      cup: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23fff7ed"/><path d="M30,35 L70,35 L65,70 L35,70 Z" fill="%23ea580c"/><path d="M70,42 C75,42 80,45 80,50 C80,55 75,58 70,58" stroke="%23ea580c" stroke-width="4" fill="none"/><ellipse cx="50" cy="35" rx="20" ry="5" fill="%239a3412"/><text x="50" y="55" font-family="Arial" font-size="4" font-weight="bold" fill="%23ffffff" text-anchor="middle">COFFEE</text></svg>`
+    };
+
+    // Dictionary Translation
+    const words = {
+      id: {
+        heroTitle: "Ubah Foto Biasa Menjadi Karya Profesional",
+        heroSubtitle: "Didukung oleh teknologi kecerdasan buatan Gemini Nano Banana untuk pemrosesan foto instan berstandar studio.",
+        tabProduct: "Foto Produk Maker",
+        tabMerge: "Gabung Foto",
+        tabGenerate: "Buat Gambar",
+        lblUploadProduct: "Unggah Foto Produk Utama",
+        txtDragDrop: "Seret & letakkan foto di sini, atau klik untuk memilih",
+        lblTemplate: "Atau Gunakan Template Objek Kami",
+        lblUploadMerge: "Unggah Gambar Gabungan (2-4)",
+        txtDragMerge: "Pilih 2 hingga 4 foto sekaligus untuk digabungkan",
+        txtGenerateIntro: "Buat gambar yang sepenuhnya baru dari awal menggunakan instruksi teks Anda.",
+        lblInstruction: "Instruksi Edit / Tema Latar",
+        txtAutoPromptBtn: "Buat Prompt Otomatis",
+        promptPlaceholder: "Contoh: letakkan produk di atas batu marmer mewah dengan air terjun estetik di belakangnya",
+        btnProcess: "Proses dengan AI",
+        btnGenerating: "Sedang mengolah...",
+        previewIdleTitle: "Pratinjau Studio TriguAI",
+        previewIdleDesc: "Unggah aset foto Anda atau buat konsep desain baru. Klik 'Proses dengan AI' untuk melihat hasil ajaib di sini.",
+        previewLoadingTitle: "Sedang Mengolah Gambar...",
+        previewLoadingDesc: "Gemini Nano Banana sedang bekerja menyempurnakan kualitas pixel Anda.",
+        btnSave: "Simpan ke Galeri",
+        btnDownload: "Unduh",
+        galleryTitle: "Riwayat Galeri",
+        txtGalleryEmpty: "Belum ada karya yang disimpan. Mulai buat karya pertama Anda!",
+        btnClearHistory: "Hapus Semua Riwayat",
+        promptProductEmpty: "Harap unggah gambar produk atau pilih salah satu template objek terlebih dahulu!",
+        promptMergeEmpty: "Harap unggah minimal 2 gambar dan maksimal 4 gambar untuk digabungkan!",
+        promptInputEmpty: "Harap isi instruksi atau prompt Anda terlebih dahulu!",
+        toastSuccessSave: "Karya Anda telah disimpan ke Galeri lokal!",
+        toastSuccessClear: "Semua riwayat galeri dibersihkan.",
+        toastAutoPromptDone: "Prompt otomatis telah siap!",
+        toastProcessingError: "Terjadi kesalahan saat memproses gambar dengan AI."
+      },
+      en: {
+        heroTitle: "Transform Ordinary Photos into Professional Artwork",
+        heroSubtitle: "Powered by Gemini Nano Banana technology for studio-standard photo processing.",
+        tabProduct: "Product Photo Maker",
+        tabMerge: "Merge Photos",
+        tabGenerate: "Generate Image",
+        lblUploadProduct: "Upload Primary Product Image",
+        txtDragDrop: "Drag & drop your photo here, or click to choose",
+        lblTemplate: "Or Use Our Object Templates",
+        lblUploadMerge: "Upload Merged Images (2-4)",
+        txtDragMerge: "Select 2 to 4 photos to blend together",
+        txtGenerateIntro: "Create a brand new image from scratch using text instructions.",
+        lblInstruction: "Edit Instructions / Background Theme",
+        txtAutoPromptBtn: "Generate Auto Prompt",
+        promptPlaceholder: "Example: place product on luxurious marble rock with an elegant waterfall in background",
+        btnProcess: "Process with AI",
+        btnGenerating: "Processing...",
+        previewIdleTitle: "TriguAI Preview Studio",
+        previewIdleDesc: "Upload photo assets or design concepts. Click 'Process with AI' to view magical outputs.",
+        previewLoadingTitle: "Processing Your Image...",
+        previewLoadingDesc: "Gemini Nano Banana is enhancing pixel details right now.",
+        btnSave: "Save to Gallery",
+        btnDownload: "Download",
+        galleryTitle: "Gallery History",
+        txtGalleryEmpty: "No designs saved yet. Create your first artwork now!",
+        btnClearHistory: "Clear All History",
+        promptProductEmpty: "Please upload a product image or select one of our template objects first!",
+        promptMergeEmpty: "Please upload at least 2 and maximum 4 images to merge!",
+        promptInputEmpty: "Please enter your instructions or prompt first!",
+        toastSuccessSave: "Your artwork has been saved to local Gallery!",
+        toastSuccessClear: "All gallery history cleared.",
+        toastAutoPromptDone: "Auto prompt is ready!",
+        toastProcessingError: "An error occurred while processing image with AI."
+      }
+    };
+
+    // Initialize Page & Event Listeners
+    window.addEventListener('DOMContentLoaded', () => {
+      detectBrowserLanguage();
+      applyTheme();
+      loadSavedHistory();
+
+      // Set up dropzone & upload triggers
+      setupProductDropzone();
+      setupMergeDropzone();
+    });
+
+    // Detect browser language
+    function detectBrowserLanguage() {
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (browserLang.startsWith('id')) {
+        currentLanguage = 'id';
+      } else {
+        currentLanguage = 'en';
+      }
+      document.getElementById('langSelect').value = currentLanguage;
+      translateUI();
+    }
+
+    // Change Language manual event
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+      currentLanguage = e.target.value;
+      translateUI();
+    });
+
+    // Handle Translations
+    function translateUI() {
+      const data = words[currentLanguage];
+      document.getElementById('heroTitle').innerText = data.heroTitle;
+      document.getElementById('heroSubtitle').innerText = data.heroSubtitle;
+      
+      document.getElementById('tabProductBtn').innerText = data.tabProduct;
+      document.getElementById('tabMergeBtn').innerText = data.tabMerge;
+      document.getElementById('tabGenerateBtn').innerText = data.tabGenerate;
+
+      document.getElementById('lblUploadProduct').innerText = data.lblUploadProduct;
+      document.getElementById('txtDragDrop').innerText = data.txtDragDrop;
+      document.getElementById('lblTemplate').innerText = data.lblTemplate;
+
+      document.getElementById('lblUploadMerge').innerText = data.lblUploadMerge;
+      document.getElementById('txtDragMerge').innerText = data.txtDragMerge;
+
+      document.getElementById('txtGenerateIntro').innerText = data.txtGenerateIntro;
+      document.getElementById('lblInstruction').innerText = data.lblInstruction;
+      document.getElementById('txtAutoPromptBtn').innerText = data.txtAutoPromptBtn;
+      document.getElementById('promptArea').placeholder = data.promptPlaceholder;
+
+      document.getElementById('btnProcessTxt').innerText = data.btnProcess;
+      document.getElementById('previewIdleTitle').innerText = data.previewIdleTitle;
+      document.getElementById('previewIdleDesc').innerText = data.previewIdleDesc;
+
+      document.getElementById('previewLoadingTitle').innerText = data.previewLoadingTitle;
+      document.getElementById('previewLoadingDesc').innerText = data.previewLoadingDesc;
+
+      document.getElementById('btnSaveTxt').innerText = data.btnSave;
+      document.getElementById('btnDownloadTxt').innerText = data.btnDownload;
+
+      document.getElementById('galleryTitle').innerText = data.galleryTitle;
+      document.getElementById('btnClearHistory').innerText = data.btnClearHistory;
+      renderGallery();
+    }
+
+    // Tab Switching System
+    function switchTab(tab) {
+      currentTab = tab;
+      const tabs = ['product', 'merge', 'generate'];
+      
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}Btn`);
+        const sec = document.getElementById(`section${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        
+        if (t === tab) {
+          btn.classList.add('bg-blue-600', 'text-white', 'shadow');
+          btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-blue-100/50', 'dark:hover:bg-slate-800');
+          sec.classList.remove('hidden');
+        } else {
+          btn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+          btn.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-blue-100/50', 'dark:hover:bg-slate-800');
+          sec.classList.add('hidden');
+        }
+      });
+    }
+
+    // Theme Switcher Setup
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+    });
+
+    function applyTheme() {
+      const htmlEl = document.documentElement;
+      const sun = document.getElementById('sunIcon');
+      const moon = document.getElementById('moonIcon');
+
+      if (currentTheme === 'dark') {
+        htmlEl.classList.add('dark');
+        sun.classList.remove('hidden');
+        moon.classList.add('hidden');
+      } else {
+        htmlEl.classList.remove('dark');
+        sun.classList.add('hidden');
+        moon.classList.remove('hidden');
+      }
+    }
+
+    // Upload Handlers (Product Photo)
+    function setupProductDropzone() {
+      const zone = document.getElementById('dropzoneProduct');
+      const input = document.getElementById('inputProduct');
+
+      zone.addEventListener('click', () => input.click());
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('border-blue-500', 'bg-blue-100/20');
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('border-blue-500', 'bg-blue-100/20');
+      });
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('border-blue-500', 'bg-blue-100/20');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          readProductFile(file);
+        }
+      });
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) readProductFile(file);
+      });
+    }
+
+    function readProductFile(file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        uploadedProductImage = event.target.result;
+        displayProductPreview();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function displayProductPreview() {
+      const wrapper = document.getElementById('previewProductWrapper');
+      const img = document.getElementById('imgProductPreview');
+      if (uploadedProductImage) {
+        img.src = uploadedProductImage;
+        wrapper.classList.remove('hidden');
+      }
+    }
+
+    function clearProductImage() {
+      uploadedProductImage = null;
+      document.getElementById('inputProduct').value = '';
+      document.getElementById('previewProductWrapper').classList.add('hidden');
+    }
+
+    // Select Product Template
+    function selectTemplate(type) {
+      uploadedProductImage = templatesBase64[type];
+      displayProductPreview();
+      showToast(currentLanguage === 'id' ? "Template terpilih!" : "Template selected!");
+    }
+
+    // Upload Handlers (Merge Images)
+    function setupMergeDropzone() {
+      const zone = document.getElementById('dropzoneMerge');
+      const input = document.getElementById('inputMerge');
+
+      zone.addEventListener('click', () => input.click());
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('border-blue-500', 'bg-blue-100/20');
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('border-blue-500', 'bg-blue-100/20');
+      });
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('border-blue-500', 'bg-blue-100/20');
+        handleMergeFiles(e.dataTransfer.files);
+      });
+      input.addEventListener('change', (e) => {
+        handleMergeFiles(e.target.files);
+      });
+    }
+
+    function handleMergeFiles(files) {
+      const remainingSlots = 4 - uploadedMergeImages.length;
+      const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+      let processedCount = 0;
+      filesToProcess.forEach(file => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            uploadedMergeImages.push(event.target.result);
+            processedCount++;
+            if (processedCount === filesToProcess.length) {
+              renderMergePreviews();
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function renderMergePreviews() {
+      const container = document.getElementById('mergePreviews');
+      const countLabel = document.getElementById('mergeCount');
+      container.innerHTML = '';
+      countLabel.innerText = `${uploadedMergeImages.length} / 4`;
+
+      uploadedMergeImages.forEach((base64, idx) => {
+        const div = document.createElement('div');
+        div.className = 'relative rounded-lg overflow-hidden border border-blue-200 dark:border-blue-900 bg-slate-100 dark:bg-slate-950 aspect-square';
+        div.innerHTML = `
+          <img src="${base64}" class="w-full h-full object-cover" />
+          <button onclick="removeMergeImage(${idx})" class="absolute top-1 right-1 p-1 bg-red-600 hover:bg-red-700 text-white rounded-full transition shadow">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeMergeImage(idx) {
+      uploadedMergeImages.splice(idx, 1);
+      renderMergePreviews();
+    }
+
+    // Gemini API calling utilities
+    async function callGeminiText(promptText) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ parts: [{ text: promptText }] }]
+      };
+      
+      let delay = 1000;
+      for (let i = 0; i < 5; i++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+          const data = await res.json();
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        } catch (e) {
+          if (i === 4) throw e;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // Call Image Editing / Image-to-Image (gemini-2.5-flash-image-preview)
+    async function callGeminiImageToImage(promptText, imagesBase64) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+      
+      const parts = [{ text: promptText }];
+      imagesBase64.forEach(base64 => {
+        const mimeType = base64.split(';')[0].split(':')[1] || "image/png";
+        const rawBase64 = base64.split(',')[1];
+        parts.push({
+          inlineData: {
+            mimeType: mimeType,
+            data: rawBase64
+          }
+        });
+      });
+
+      const payload = {
+        contents: [{ parts: parts }],
+        generationConfig: {
+          responseModalities: ['TEXT', 'IMAGE']
+        }
+      };
+
+      let delay = 1000;
+      for (let i = 0; i < 5; i++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+          const data = await res.json();
+          const base64Part = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+          if (base64Part) {
+            return `data:image/png;base64,${base64Part}`;
+          }
+          throw new Error("No image data returned from AI model");
+        } catch (e) {
+          if (i === 4) throw e;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // Call Text-to-Image Generation (imagen-4.0-generate-001)
+    async function callImagenGenerate(promptText) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+      const payload = {
+        instances: [{ prompt: promptText }],
+        parameters: { sampleCount: 1 }
+      };
+
+      let delay = 1000;
+      for (let i = 0; i < 5; i++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+          const data = await res.json();
+          const base64Bytes = data.predictions?.[0]?.bytesBase64Encoded;
+          if (base64Bytes) {
+            return `data:image/png;base64,${base64Bytes}`;
+          }
+          throw new Error("No image generated");
+        } catch (e) {
+          if (i === 4) throw e;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // Auto Prompt Generator Strategy
+    async function generateAutoPrompt() {
+      const promptInput = document.getElementById('promptArea').value.trim();
+      let inputContext = promptInput;
+
+      if (!inputContext) {
+        if (currentTab === 'product') {
+          inputContext = "Product photo backdrop";
+        } else if (currentTab === 'merge') {
+          inputContext = "Merging multiple scenes beautifully";
+        } else {
+          inputContext = "A creative digital painting";
+        }
+      }
+
+      setProcessingState(true);
+      try {
+        const generationPrompt = `You are a professional product photography prompt designer. Turn the user's short description into a highly detailed, professional, studio-level background setting description. Ensure it remains under 70 words. Keep it descriptive, mentioning professional studio lighting, depth of field, colors, and environment. Focus only on the scenery. User Input: "${inputContext}"`;
+        const autoResult = await callGeminiText(generationPrompt);
+        
+        if (autoResult) {
+          document.getElementById('promptArea').value = autoResult.trim();
+          showToast(words[currentLanguage].toastAutoPromptDone);
+        }
+      } catch (e) {
+        showToast(words[currentLanguage].toastProcessingError);
+      } finally {
+        setProcessingState(false);
+      }
+    }
+
+    // Main Processing Engine
+    async function processAI() {
+      const promptInput = document.getElementById('promptArea').value.trim();
+      
+      // Validations
+      if (currentTab === 'product' && !uploadedProductImage) {
+        showToast(words[currentLanguage].promptProductEmpty);
+        return;
+      }
+      if (currentTab === 'merge' && uploadedMergeImages.length < 2) {
+        showToast(words[currentLanguage].promptMergeEmpty);
+        return;
+      }
+      if (!promptInput) {
+        showToast(words[currentLanguage].promptInputEmpty);
+        return;
+      }
+
+      setProcessingState(true);
+      showWorkspacePreview('loading');
+
+      try {
+        let resultUrl = null;
+
+        if (currentTab === 'product') {
+          // Image edit / Background placement with gemini-2.5-flash-image-preview
+          const combinedPrompt = `Change the background of the main object in this photo. Put the product object beautifully and seamlessly in the following environment: ${promptInput}. Make sure the object remains clear, unchanged, and the light shadows match perfectly.`;
+          resultUrl = await callGeminiImageToImage(combinedPrompt, [uploadedProductImage]);
+        } else if (currentTab === 'merge') {
+          // Merge photos with instruction
+          const combinedPrompt = `Blend and combine all these images into a single cohesive, high-quality photograph according to this instruction: ${promptInput}. Clean up margins, match lighting, and make it look natural.`;
+          resultUrl = await callGeminiImageToImage(combinedPrompt, uploadedMergeImages);
+        } else if (currentTab === 'generate') {
+          // Text-to-image with Imagen 4.0
+          resultUrl = await callImagenGenerate(promptInput);
+        }
+
+        if (resultUrl) {
+          finalAIResult = resultUrl;
+          
+          // Display output
+          const resultImgEl = document.getElementById('resultImgEl');
+          resultImgEl.src = resultUrl;
+          
+          // Setup download action
+          const downloadAnchor = document.getElementById('downloadAnchor');
+          downloadAnchor.href = resultUrl;
+
+          showWorkspacePreview('result');
+        } else {
+          throw new Error("No result URL received");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast(words[currentLanguage].toastProcessingError);
+        showWorkspacePreview('idle');
+      } finally {
+        setProcessingState(false);
+      }
+    }
+
+    // Control Workspace View States
+    function showWorkspacePreview(state) {
+      const idle = document.getElementById('previewIdle');
+      const loading = document.getElementById('previewLoading');
+      const result = document.getElementById('previewResult');
+
+      idle.classList.add('hidden');
+      loading.classList.add('hidden');
+      result.classList.add('hidden');
+
+      if (state === 'idle') idle.classList.remove('hidden');
+      if (state === 'loading') loading.classList.remove('hidden');
+      if (state === 'result') result.classList.remove('hidden');
+    }
+
+    // Toggle processing buttons & spinner animations
+    function setProcessingState(loading) {
+      const btn = document.getElementById('btnProcess');
+      const btnText = document.getElementById('btnProcessTxt');
+      
+      if (loading) {
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+        btnText.innerText = words[currentLanguage].btnGenerating;
+      } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-70', 'cursor-not-allowed');
+        btnText.innerText = words[currentLanguage].btnProcess;
+      }
+    }
+
+    // Storage Management (Local Storage History)
+    function loadSavedHistory() {
+      const stored = localStorage.getItem('triguai_gallery');
+      if (stored) {
+        try {
+          savedGallery = JSON.parse(stored);
+        } catch (e) {
+          savedGallery = [];
+        }
+      }
+      renderGallery();
+    }
+
+    function saveToHistory() {
+      if (!finalAIResult) return;
+      
+      const newArtwork = {
+        id: 'artwork_' + Date.now(),
+        url: finalAIResult,
+        timestamp: new Date().toLocaleString()
+      };
+
+      savedGallery.unshift(newArtwork);
+      localStorage.setItem('triguai_gallery', JSON.stringify(savedGallery));
+      renderGallery();
+      showToast(words[currentLanguage].toastSuccessSave);
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      const emptyMsg = document.getElementById('galleryEmpty');
+
+      if (savedGallery.length === 0) {
+        grid.innerHTML = '';
+        emptyMsg.classList.remove('hidden');
+        document.getElementById('txtGalleryEmpty').innerText = words[currentLanguage].txtGalleryEmpty;
+        return;
+      }
+
+      emptyMsg.classList.add('hidden');
+      grid.innerHTML = '';
+
+      savedGallery.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = "group relative bg-slate-50 dark:bg-slate-950 rounded-xl overflow-hidden border border-blue-100 dark:border-blue-900 shadow-sm hover:shadow-md transition-all duration-300";
+        card.innerHTML = `
+          <div class="aspect-square w-full bg-slate-950 overflow-hidden relative">
+            <img src="${item.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition duration-200 flex items-center justify-center gap-2">
+              <a href="${item.url}" download="triguai-${item.id}.png" class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" title="Download">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              </a>
+              <button onclick="deleteGalleryItem('${item.id}')" class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition" title="Delete">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="p-2 text-center text-[10px] text-slate-500 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+            ${item.timestamp}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function deleteGalleryItem(id) {
+      savedGallery = savedGallery.filter(item => item.id !== id);
+      localStorage.setItem('triguai_gallery', JSON.stringify(savedGallery));
+      renderGallery();
+    }
+
+    function clearAllHistory() {
+      savedGallery = [];
+      localStorage.removeItem('triguai_gallery');
+      renderGallery();
+      showToast(words[currentLanguage].toastSuccessClear);
+    }
+
+    // Customized Toast Notifications (No alert blocks allowed)
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMsg');
+      
+      msg.innerText = message;
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
+
+```
